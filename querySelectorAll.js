@@ -11,12 +11,12 @@ const getName = (selector) => matchNoNull(selector, /\[name\=\"([a-zA-Z-_]*|\w+)
 const getTagName = (selector) => matchNoNull(selector, /(?:^|\W)(h1|h2|h3|input|a|li|div|form)(?:\W|$)/);
 
 const getElementsForClassesAsArray = (classes, root) => Array.from(root.getElementsByClassName(classes));
-const getElementsForNameAsArray = (name) => Array.from(sandboxDocument.getElementsByName(name));
+const getElementsForNameAsArray = (name) => Array.from(document.getElementsByName(name));
 const getElementsForTagNameAsArray = (tagName, root) => Array.from(root.getElementsByTagName(tagName));
 
 function parseSelectorComponent(component, root) {
   return {
-    id: sandboxDocument.getElementById(getId(component)),
+    id: document.getElementById(getId(component)),
     classNames: getElementsForClassesAsArray(getClasses(component).join(' '), root),
     name: getElementsForNameAsArray(getName(component)),
     tagName: getElementsForTagNameAsArray(getTagName(component), root)
@@ -47,7 +47,7 @@ function getMatchesForDirectChild(parent, child, root) {
 }
 
 function querySelectorAll(selector) {
-  let rootSet = [sandboxDocument];
+  let rootSet = [document];
 
   selector = selector.replace(/\s\>\s/g, '>'); // ditch the spaces around '>'
 
@@ -60,5 +60,5 @@ function querySelectorAll(selector) {
       ...(directChild.length > 1) ?
         getMatchesForDirectChild(...directChild, rootNode) : getMatchesForComponent(component, rootNode)
     ], []);
-  }, [sandboxDocument]);
+  }, [document]);
 }
